@@ -18,6 +18,8 @@ function sendNumberValue(number) {
 }
 
 function addDecimal() {
+  //If operator pressed, don't add decimal
+  if (awaitingNextValue) return;
   // if no decimal, add one
   if (!calculatorDisplay.textContent.includes('.')) {
     calculatorDisplay.textContent = `${calculatorDisplay.textContent}.`;
@@ -44,7 +46,7 @@ inputBtns.forEach((inputBtns) => {
   if (inputBtns.classList.length === 0) {
     inputBtns.addEventListener('click', () => sendNumberValue(inputBtns.value));
   } else if (inputBtns.classList.contains('operator')) {
-    inputBtns.addEventListener('click', () => sendNumberValue(inputBtns.value));
+    inputBtns.addEventListener('click', () => useOperator(inputBtns.value));
   } else if (inputBtns.classList.contains('decimal')) {
     inputBtns.addEventListener('click', () => addDecimal());
   }
