@@ -2,6 +2,19 @@ const calculatorDisplay = document.querySelector('h1');
 const inputBtns = document.querySelectorAll('button');
 const clearBtn = document.getElementById('clear-btn');
 
+// Calculate first and seceond values depending on operator
+const calculate = {
+  '/': (firstNumber, seceondNumber) => firstNumber / seceondNumber,
+
+  '*': (firstNumber, seceondNumber) => firstNumber * seceondNumber,
+
+  '+': (firstNumber, seceondNumber) => firstNumber + seceondNumber,
+
+  '-': (firstNumber, seceondNumber) => firstNumber - seceondNumber,
+
+  '=': (firstNumber, seceondNumber) => seceondNumber,
+};
+
 let firstValue = 0;
 let operatorValue = '';
 let awaitingNextValue = false;
@@ -28,17 +41,30 @@ function addDecimal() {
 
 function useOperator(operator) {
   const currentValue = Number(calculatorDisplay.textContent);
+  // Prevent multiple operator
+  if (operatorValue && awaitingNextValue) {
+    operatorValue = operator;
+    return;
+  }
   // Assign firtsValue if no value
   if (!firstValue) {
     firstValue = currentValue;
   } else {
-    console.log('currentValue', currentValue);
+    const calculation = calculate[operatorValue](firstValue, currentValue);
+    calculatorDisplay.textContent = calculation;
+    firstValue = calculation;
   }
   //Ready for next value, store operator
   awaitingNextValue = true;
   operatorValue = operator;
-  console.log('firstValue', firstValue);
-  console.log('operator', operatorValue);
+}
+
+// Reset all values, Display
+function resetAll() {
+  firstValue = 0;
+  operatorValue = '';
+  awaitingNextValue = false;
+  calculatorDisplay.textContent = '0';
 }
 
 // Add Event Listeners for numbers, operators, decimal buttons
@@ -51,14 +77,6 @@ inputBtns.forEach((inputBtns) => {
     inputBtns.addEventListener('click', () => addDecimal());
   }
 });
-
-// Reset all values, Display
-function resetAll() {
-  firstValue = 0;
-  operatorValue = '';
-  awaitingNextValue = false;
-  calculatorDisplay.textContent = '0';
-}
 
 // Event Listener
 clearBtn.addEventListener('click', resetAll);
